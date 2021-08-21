@@ -19,6 +19,7 @@ module Isucondition
     FRONTEND_CONTENTS_PATH = '../public'
     JIA_JWT_SIGNING_KEY_PATH = '../ec256-public.pem'
     DEFAULT_ICON_FILE_PATH = '../NoImage.jpg'
+    DEFAULT_ICON_FILE_DATA = File.binread(DEFAULT_ICON_FILE_PATH).freeze
     DEFAULT_JIA_SERVICE_URL = 'http://localhost:5000'
 
     MYSQL_ERR_NUM_DUPLICATE_ENTRY = 1062
@@ -250,7 +251,7 @@ module Isucondition
       halt_error 400, 'bad format: icon' if fh && (!fh.kind_of?(Hash) || !fh[:tempfile].is_a?(Tempfile))
 
       use_default_image = fh.nil?
-      image = use_default_image ? File.binread(DEFAULT_ICON_FILE_PATH) : fh.fetch(:tempfile).binmode.read
+      image = use_default_image ? DEFAULT_ICON_FILE_DATA : fh.fetch(:tempfile).binmode.read
 
       isu = db_transaction do
         begin

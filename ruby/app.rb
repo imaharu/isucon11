@@ -5,6 +5,7 @@ require 'sinatra/base'
 require 'uri'
 require 'mysql2'
 require 'mysql2-cs-bind'
+require 'digest/sha1'
 
 module Isucondition
   class App < Sinatra::Base
@@ -336,9 +337,11 @@ module Isucondition
       halt_error 401, 'you are not signed in' unless jia_user_id
 
       jia_isu_uuid = params[:jia_isu_uuid]
-      isu = db.xquery('SELECT `image` FROM `isu` WHERE `jia_isu_uuid` = ? AND `jia_user_id` = ?', jia_isu_uuid, jia_user_id).first
+      isu = db.xquery('SELECT image, created_at FROM `isu` WHERE `jia_isu_uuid` = ? AND `jia_user_id` = ?', jia_isu_uuid, jia_user_id).first
       halt_error 404, 'not found: isu' unless isu
 
+      last_modified isu.fetch(:created_at)
+      etag Digest::SHA1.hexdigest(isu.fetch(:created_at).to_s)
       isu.fetch(:image)
     end
 

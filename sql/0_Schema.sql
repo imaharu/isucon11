@@ -37,3 +37,5 @@ CREATE TABLE `isu_association_config` (
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
 
 CREATE INDEX IF NOT EXISTS jia_isu_uuid_jia_user_id ON isu(jia_isu_uuid, jia_user_id);
+CREATE INDEX IF NOT EXISTS jia_user_id ON isu(jia_user_id);
+CREATE INDEX IF NOT EXISTS jia_isu_uuid ON isu_condition(jia_isu_uuid);
